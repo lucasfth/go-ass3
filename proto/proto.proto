@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+option go_package = "github.com/Lucasfth/go-ass3/proto";
+
+package proto;
+
