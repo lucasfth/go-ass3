@@ -20,7 +20,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Message struct {
+type Tweet struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -28,8 +28,8 @@ type Message struct {
 	Body string `protobuf:"bytes,1,opt,name=body,proto3" json:"body,omitempty"`
 }
 
-func (x *Message) Reset() {
-	*x = Message{}
+func (x *Tweet) Reset() {
+	*x = Tweet{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_proto_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -37,13 +37,13 @@ func (x *Message) Reset() {
 	}
 }
 
-func (x *Message) String() string {
+func (x *Tweet) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Message) ProtoMessage() {}
+func (*Tweet) ProtoMessage() {}
 
-func (x *Message) ProtoReflect() protoreflect.Message {
+func (x *Tweet) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_proto_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,14 +55,163 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message.ProtoReflect.Descriptor instead.
-func (*Message) Descriptor() ([]byte, []int) {
+// Deprecated: Use Tweet.ProtoReflect.Descriptor instead.
+func (*Tweet) Descriptor() ([]byte, []int) {
 	return file_proto_proto_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Message) GetBody() string {
+func (x *Tweet) GetBody() string {
 	if x != nil {
 		return x.Body
+	}
+	return ""
+}
+
+type Comment struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Body string `protobuf:"bytes,1,opt,name=body,proto3" json:"body,omitempty"`
+}
+
+func (x *Comment) Reset() {
+	*x = Comment{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_proto_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Comment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Comment) ProtoMessage() {}
+
+func (x *Comment) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_proto_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Comment.ProtoReflect.Descriptor instead.
+func (*Comment) Descriptor() ([]byte, []int) {
+	return file_proto_proto_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Comment) GetBody() string {
+	if x != nil {
+		return x.Body
+	}
+	return ""
+}
+
+type AskForTimeMessage struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ClientId int64 `protobuf:"varint,1,opt,name=clientId,proto3" json:"clientId,omitempty"`
+}
+
+func (x *AskForTimeMessage) Reset() {
+	*x = AskForTimeMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_proto_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AskForTimeMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AskForTimeMessage) ProtoMessage() {}
+
+func (x *AskForTimeMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_proto_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AskForTimeMessage.ProtoReflect.Descriptor instead.
+func (*AskForTimeMessage) Descriptor() ([]byte, []int) {
+	return file_proto_proto_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *AskForTimeMessage) GetClientId() int64 {
+	if x != nil {
+		return x.ClientId
+	}
+	return 0
+}
+
+type ReplyTimeMessage struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ServerName string `protobuf:"bytes,1,opt,name=serverName,proto3" json:"serverName,omitempty"`
+	Time       string `protobuf:"bytes,2,opt,name=time,proto3" json:"time,omitempty"`
+}
+
+func (x *ReplyTimeMessage) Reset() {
+	*x = ReplyTimeMessage{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_proto_proto_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ReplyTimeMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReplyTimeMessage) ProtoMessage() {}
+
+func (x *ReplyTimeMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_proto_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReplyTimeMessage.ProtoReflect.Descriptor instead.
+func (*ReplyTimeMessage) Descriptor() ([]byte, []int) {
+	return file_proto_proto_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ReplyTimeMessage) GetServerName() string {
+	if x != nil {
+		return x.ServerName
+	}
+	return ""
+}
+
+func (x *ReplyTimeMessage) GetTime() string {
+	if x != nil {
+		return x.Time
 	}
 	return ""
 }
@@ -71,14 +220,33 @@ var File_proto_proto_proto protoreflect.FileDescriptor
 
 var file_proto_proto_proto_rawDesc = []byte{
 	0x0a, 0x11, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x12, 0x05, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x1d, 0x0a, 0x07, 0x4d, 0x65,
-	0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x32, 0x3e, 0x0a, 0x0e, 0x54, 0x77, 0x69,
-	0x74, 0x74, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2c, 0x0a, 0x08, 0x53,
-	0x61, 0x79, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x12, 0x0e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
-	0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x1a, 0x0e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
-	0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x00, 0x42, 0x0d, 0x5a, 0x0b, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x74, 0x6f, 0x12, 0x07, 0x74, 0x77, 0x69, 0x74, 0x74, 0x65, 0x72, 0x22, 0x1b, 0x0a, 0x05,
+	0x54, 0x77, 0x65, 0x65, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x22, 0x1d, 0x0a, 0x07, 0x43, 0x6f, 0x6d,
+	0x6d, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x22, 0x2f, 0x0a, 0x11, 0x41, 0x73, 0x6b, 0x46,
+	0x6f, 0x72, 0x54, 0x69, 0x6d, 0x65, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x1a, 0x0a,
+	0x08, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x08, 0x63, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x22, 0x46, 0x0a, 0x10, 0x52, 0x65, 0x70,
+	0x6c, 0x79, 0x54, 0x69, 0x6d, 0x65, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x1e, 0x0a,
+	0x0a, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0a, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a,
+	0x04, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x69, 0x6d,
+	0x65, 0x32, 0x3c, 0x0a, 0x0c, 0x54, 0x77, 0x65, 0x65, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x12, 0x2c, 0x0a, 0x08, 0x53, 0x61, 0x79, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x12, 0x0e, 0x2e,
+	0x74, 0x77, 0x69, 0x74, 0x74, 0x65, 0x72, 0x2e, 0x54, 0x77, 0x65, 0x65, 0x74, 0x1a, 0x0e, 0x2e,
+	0x74, 0x77, 0x69, 0x74, 0x74, 0x65, 0x72, 0x2e, 0x54, 0x77, 0x65, 0x65, 0x74, 0x22, 0x00, 0x32,
+	0x42, 0x0a, 0x0e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x12, 0x30, 0x0a, 0x08, 0x53, 0x61, 0x79, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x12, 0x10, 0x2e,
+	0x74, 0x77, 0x69, 0x74, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x1a,
+	0x10, 0x2e, 0x74, 0x77, 0x69, 0x74, 0x74, 0x65, 0x72, 0x2e, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e,
+	0x74, 0x22, 0x00, 0x32, 0x50, 0x0a, 0x07, 0x54, 0x69, 0x6d, 0x65, 0x41, 0x73, 0x6b, 0x12, 0x45,
+	0x0a, 0x0a, 0x41, 0x73, 0x6b, 0x46, 0x6f, 0x72, 0x54, 0x69, 0x6d, 0x65, 0x12, 0x1a, 0x2e, 0x74,
+	0x77, 0x69, 0x74, 0x74, 0x65, 0x72, 0x2e, 0x41, 0x73, 0x6b, 0x46, 0x6f, 0x72, 0x54, 0x69, 0x6d,
+	0x65, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x1a, 0x19, 0x2e, 0x74, 0x77, 0x69, 0x74, 0x74,
+	0x65, 0x72, 0x2e, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x54, 0x69, 0x6d, 0x65, 0x4d, 0x65, 0x73, 0x73,
+	0x61, 0x67, 0x65, 0x22, 0x00, 0x42, 0x0d, 0x5a, 0x0b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -93,15 +261,22 @@ func file_proto_proto_proto_rawDescGZIP() []byte {
 	return file_proto_proto_proto_rawDescData
 }
 
-var file_proto_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_proto_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_proto_proto_goTypes = []interface{}{
-	(*Message)(nil), // 0: proto.Message
+	(*Tweet)(nil),             // 0: twitter.Tweet
+	(*Comment)(nil),           // 1: twitter.Comment
+	(*AskForTimeMessage)(nil), // 2: twitter.AskForTimeMessage
+	(*ReplyTimeMessage)(nil),  // 3: twitter.ReplyTimeMessage
 }
 var file_proto_proto_proto_depIdxs = []int32{
-	0, // 0: proto.TwitterService.SayHello:input_type -> proto.Message
-	0, // 1: proto.TwitterService.SayHello:output_type -> proto.Message
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 0: twitter.TweetService.SayHello:input_type -> twitter.Tweet
+	1, // 1: twitter.CommentService.SayHello:input_type -> twitter.Comment
+	2, // 2: twitter.TimeAsk.AskForTime:input_type -> twitter.AskForTimeMessage
+	0, // 3: twitter.TweetService.SayHello:output_type -> twitter.Tweet
+	1, // 4: twitter.CommentService.SayHello:output_type -> twitter.Comment
+	3, // 5: twitter.TimeAsk.AskForTime:output_type -> twitter.ReplyTimeMessage
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -114,7 +289,43 @@ func file_proto_proto_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_proto_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message); i {
+			switch v := v.(*Tweet); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_proto_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Comment); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_proto_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AskForTimeMessage); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_proto_proto_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ReplyTimeMessage); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -132,9 +343,9 @@ func file_proto_proto_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_proto_proto_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   4,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   3,
 		},
 		GoTypes:           file_proto_proto_proto_goTypes,
 		DependencyIndexes: file_proto_proto_proto_depIdxs,
