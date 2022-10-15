@@ -63,9 +63,9 @@ func startServer (server *Server) {
 }
 
 func (c *Server) AskForTime(ctx context.Context, in *proto.AskForTimeMessage) (*proto.ReplyTimeMessage, error) {
-	log.Printf("Received request from %d", in.Id)
+	log.Printf("Received request from %d", in.ClientId)
 	return &proto.ReplyTimeMessage{
-		Time: time.Now().Unix(),
+		Time: time.Now().String(),
 		ServerName: c.name,
 		}, nil
 }

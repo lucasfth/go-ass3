@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package twitter;
 
 option go_package = "proto/proto";
@@ -20,7 +21,6 @@ service CommentService {
 }
 
 
-// ↓lamppost timestamp
 message AskForTimeMessage {
     int64 clientId = 1;
 }

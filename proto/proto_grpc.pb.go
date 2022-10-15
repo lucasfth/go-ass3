@@ -18,86 +18,258 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// TwitterServiceClient is the client API for TwitterService service.
+// TweetServiceClient is the client API for TweetService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type TwitterServiceClient interface {
-	SayHello(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
+type TweetServiceClient interface {
+	SayHello(ctx context.Context, in *Tweet, opts ...grpc.CallOption) (*Tweet, error)
 }
 
-type twitterServiceClient struct {
+type tweetServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewTwitterServiceClient(cc grpc.ClientConnInterface) TwitterServiceClient {
-	return &twitterServiceClient{cc}
+func NewTweetServiceClient(cc grpc.ClientConnInterface) TweetServiceClient {
+	return &tweetServiceClient{cc}
 }
 
-func (c *twitterServiceClient) SayHello(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
-	out := new(Message)
-	err := c.cc.Invoke(ctx, "/proto.TwitterService/SayHello", in, out, opts...)
+func (c *tweetServiceClient) SayHello(ctx context.Context, in *Tweet, opts ...grpc.CallOption) (*Tweet, error) {
+	out := new(Tweet)
+	err := c.cc.Invoke(ctx, "/twitter.TweetService/SayHello", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// TwitterServiceServer is the server API for TwitterService service.
-// All implementations must embed UnimplementedTwitterServiceServer
+// TweetServiceServer is the server API for TweetService service.
+// All implementations must embed UnimplementedTweetServiceServer
 // for forward compatibility
-type TwitterServiceServer interface {
-	SayHello(context.Context, *Message) (*Message, error)
-	mustEmbedUnimplementedTwitterServiceServer()
+type TweetServiceServer interface {
+	SayHello(context.Context, *Tweet) (*Tweet, error)
+	mustEmbedUnimplementedTweetServiceServer()
 }
 
-// UnimplementedTwitterServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedTwitterServiceServer struct {
+// UnimplementedTweetServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedTweetServiceServer struct {
 }
 
-func (UnimplementedTwitterServiceServer) SayHello(context.Context, *Message) (*Message, error) {
+func (UnimplementedTweetServiceServer) SayHello(context.Context, *Tweet) (*Tweet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
 }
-func (UnimplementedTwitterServiceServer) mustEmbedUnimplementedTwitterServiceServer() {}
+func (UnimplementedTweetServiceServer) mustEmbedUnimplementedTweetServiceServer() {}
 
-// UnsafeTwitterServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to TwitterServiceServer will
+// UnsafeTweetServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TweetServiceServer will
 // result in compilation errors.
-type UnsafeTwitterServiceServer interface {
-	mustEmbedUnimplementedTwitterServiceServer()
+type UnsafeTweetServiceServer interface {
+	mustEmbedUnimplementedTweetServiceServer()
 }
 
-func RegisterTwitterServiceServer(s grpc.ServiceRegistrar, srv TwitterServiceServer) {
-	s.RegisterService(&TwitterService_ServiceDesc, srv)
+func RegisterTweetServiceServer(s grpc.ServiceRegistrar, srv TweetServiceServer) {
+	s.RegisterService(&TweetService_ServiceDesc, srv)
 }
 
-func _TwitterService_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Message)
+func _TweetService_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Tweet)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TwitterServiceServer).SayHello(ctx, in)
+		return srv.(TweetServiceServer).SayHello(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.TwitterService/SayHello",
+		FullMethod: "/twitter.TweetService/SayHello",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TwitterServiceServer).SayHello(ctx, req.(*Message))
+		return srv.(TweetServiceServer).SayHello(ctx, req.(*Tweet))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// TwitterService_ServiceDesc is the grpc.ServiceDesc for TwitterService service.
+// TweetService_ServiceDesc is the grpc.ServiceDesc for TweetService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var TwitterService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "proto.TwitterService",
-	HandlerType: (*TwitterServiceServer)(nil),
+var TweetService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "twitter.TweetService",
+	HandlerType: (*TweetServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SayHello",
-			Handler:    _TwitterService_SayHello_Handler,
+			Handler:    _TweetService_SayHello_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/proto.proto",
+}
+
+// CommentServiceClient is the client API for CommentService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type CommentServiceClient interface {
+	SayHello(ctx context.Context, in *Comment, opts ...grpc.CallOption) (*Comment, error)
+}
+
+type commentServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewCommentServiceClient(cc grpc.ClientConnInterface) CommentServiceClient {
+	return &commentServiceClient{cc}
+}
+
+func (c *commentServiceClient) SayHello(ctx context.Context, in *Comment, opts ...grpc.CallOption) (*Comment, error) {
+	out := new(Comment)
+	err := c.cc.Invoke(ctx, "/twitter.CommentService/SayHello", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CommentServiceServer is the server API for CommentService service.
+// All implementations must embed UnimplementedCommentServiceServer
+// for forward compatibility
+type CommentServiceServer interface {
+	SayHello(context.Context, *Comment) (*Comment, error)
+	mustEmbedUnimplementedCommentServiceServer()
+}
+
+// UnimplementedCommentServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedCommentServiceServer struct {
+}
+
+func (UnimplementedCommentServiceServer) SayHello(context.Context, *Comment) (*Comment, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+}
+func (UnimplementedCommentServiceServer) mustEmbedUnimplementedCommentServiceServer() {}
+
+// UnsafeCommentServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CommentServiceServer will
+// result in compilation errors.
+type UnsafeCommentServiceServer interface {
+	mustEmbedUnimplementedCommentServiceServer()
+}
+
+func RegisterCommentServiceServer(s grpc.ServiceRegistrar, srv CommentServiceServer) {
+	s.RegisterService(&CommentService_ServiceDesc, srv)
+}
+
+func _CommentService_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Comment)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CommentServiceServer).SayHello(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/twitter.CommentService/SayHello",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CommentServiceServer).SayHello(ctx, req.(*Comment))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CommentService_ServiceDesc is the grpc.ServiceDesc for CommentService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var CommentService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "twitter.CommentService",
+	HandlerType: (*CommentServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SayHello",
+			Handler:    _CommentService_SayHello_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/proto.proto",
+}
+
+// TimeAskClient is the client API for TimeAsk service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type TimeAskClient interface {
+	AskForTime(ctx context.Context, in *AskForTimeMessage, opts ...grpc.CallOption) (*ReplyTimeMessage, error)
+}
+
+type timeAskClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewTimeAskClient(cc grpc.ClientConnInterface) TimeAskClient {
+	return &timeAskClient{cc}
+}
+
+func (c *timeAskClient) AskForTime(ctx context.Context, in *AskForTimeMessage, opts ...grpc.CallOption) (*ReplyTimeMessage, error) {
+	out := new(ReplyTimeMessage)
+	err := c.cc.Invoke(ctx, "/twitter.TimeAsk/AskForTime", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TimeAskServer is the server API for TimeAsk service.
+// All implementations must embed UnimplementedTimeAskServer
+// for forward compatibility
+type TimeAskServer interface {
+	AskForTime(context.Context, *AskForTimeMessage) (*ReplyTimeMessage, error)
+	mustEmbedUnimplementedTimeAskServer()
+}
+
+// UnimplementedTimeAskServer must be embedded to have forward compatible implementations.
+type UnimplementedTimeAskServer struct {
+}
+
+func (UnimplementedTimeAskServer) AskForTime(context.Context, *AskForTimeMessage) (*ReplyTimeMessage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AskForTime not implemented")
+}
+func (UnimplementedTimeAskServer) mustEmbedUnimplementedTimeAskServer() {}
+
+// UnsafeTimeAskServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TimeAskServer will
+// result in compilation errors.
+type UnsafeTimeAskServer interface {
+	mustEmbedUnimplementedTimeAskServer()
+}
+
+func RegisterTimeAskServer(s grpc.ServiceRegistrar, srv TimeAskServer) {
+	s.RegisterService(&TimeAsk_ServiceDesc, srv)
+}
+
+func _TimeAsk_AskForTime_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AskForTimeMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TimeAskServer).AskForTime(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/twitter.TimeAsk/AskForTime",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TimeAskServer).AskForTime(ctx, req.(*AskForTimeMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TimeAsk_ServiceDesc is the grpc.ServiceDesc for TimeAsk service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var TimeAsk_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "twitter.TimeAsk",
+	HandlerType: (*TimeAskServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "AskForTime",
+			Handler:    _TimeAsk_AskForTime_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
