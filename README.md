@@ -42,3 +42,7 @@ We call clients of the Chitty-Chat service Participants.
 
 - Partial implementations may be accepted, if the students can reason what they should have done in the report.
 - The group must at least *attempt* to solve each of the requirements. The whole assignment is failed, if a requirement is not addressed.
+
+# Related Material
+## gRPC example
+Click [here](https://github.com/theauk/grpcTimeRequestExample)
