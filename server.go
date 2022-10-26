@@ -5,7 +5,6 @@ import (
 	"net"
 	"os"
 	"chatster/chatserver"
-
 	"google.golang.org/grpc"
 )
 
@@ -14,7 +13,7 @@ func main() {
 	//assign port
 	Port := os.Getenv("PORT")
 	if Port == "" {
-		Port = "8080" //default Port set to 5000 if PORT is not set in env
+		Port = "8080" //default Port set to 8080 if PORT is not set in env
 	}
 
 	//init listener
