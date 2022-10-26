@@ -1,77 +1,115 @@
-
-
 package main
 
 import (
 	"bufio"
 	"context"
-	"flag"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"fmt"
+	"chatster/chatserver"
 	"log"
 	"os"
-	proto "twitter/proto"
-	"strconv"
-)
-
-type Client struct {
-	id         int
-	portNumber int
-}
-
-var (
-	clientPort = flag.Int("cPort", 0, "client port number")
-	serverPort = flag.Int("sPort", 0, "server port number (should match the port used for the server)")
+	"strings"
+	"google.golang.org/grpc"
 )
 
 func main() {
-	// Parse the flags to get the port for the client
-	flag.Parse()
 
-	// Create a client
-	client := &Client{
-		id:         1,
-		portNumber: *clientPort,
+	fmt.Println("Enter Server IP:Port ::: ")
+	reader := bufio.NewReader(os.Stdin)
+	serverID, err := reader.ReadString('\n')
+
+	if err != nil {
+		log.Printf("Failed to read from console :: %v", err)
+	}
+	serverID = strings.Trim(serverID, "\r\n")
+
+	log.Println("Connecting : " + serverID)
+
+	//connect to grpc server
+	conn, err := grpc.Dial(serverID, grpc.WithInsecure())
+
+	if err != nil {
+		log.Fatalf("Faile to conncet to gRPC server :: %v", err)
+	}
+	defer conn.Close()
+
+	//call ChatService to create a stream
+	client := chatserver.NewServicesClient(conn)
+
+	stream, err := client.ChatService(context.Background())
+	if err != nil {
+		log.Fatalf("Failed to call ChatService :: %v", err)
 	}
 
-	// Wait for the client (user) to ask for the time
-	go waitForTimeRequest(client)
+	// implement communication with gRPC server
+	ch := clienthandle{stream: stream}
+	ch.clientConfig()
+	go ch.sendMessage()
+	go ch.receiveMessage()
 
+	//blocker
+	bl := make(chan bool)
+	<-bl
+
+}
+
+//clienthandle
+type clienthandle struct {
+	stream     chatserver.Services_ChatServiceClient
+	clientName string
+}
+
+func (ch *clienthandle) clientConfig() {
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Printf("Your Name : ")
+	name, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatalf(" Failed to read from console :: %v", err)
+	}
+	ch.clientName = strings.Trim(name, "\r\n")
+
+}
+
+//send message
+func (ch *clienthandle) sendMessage() {
+
+	// create a loop
 	for {
 
-	}
-}
+		reader := bufio.NewReader(os.Stdin)
+		clientMessage, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatalf(" Failed to read from console :: %v", err)
+		}
+		clientMessage = strings.Trim(clientMessage, "\r\n")
 
-func waitForTimeRequest(client *Client) {
-	// Connect to the server
-	serverConnection, _ := connectToServer()
+		clientMessageBox := &chatserver.FromClient{
+			Name: ch.clientName,
+			Body: clientMessage,
+		}
 
-	// Wait for input in the client terminal
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		input := scanner.Text()
-		log.Printf("Client asked for time with input: %s\n", input)
-
-		// Ask the server for the time
-		timeReturnMessage, err := serverConnection.AskForTime(context.Background(), &proto.AskForTimeMessage{
-			ClientId: int64(client.id),
-		})
+		err = ch.stream.Send(clientMessageBox)
 
 		if err != nil {
-			log.Printf(err.Error())
-		} else {
-			log.Printf("Server %s says the time is %s\n", timeReturnMessage.ServerName, timeReturnMessage.Time)
+			log.Printf("Error while sending message to server :: %v", err)
 		}
+
 	}
+
 }
 
-func connectToServer() (proto.TimeAskClient, error) {
-	// Dial the server at the specified port.
-	conn, err := grpc.Dial("localhost:"+strconv.Itoa(*serverPort), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Could not connect to port %d", *serverPort)
-	} else {
-		log.Printf("Connected to the server at port %d\n", *serverPort)
+//receive message
+func (ch *clienthandle) receiveMessage() {
+
+	//create a loop
+	for {
+		mssg, err := ch.stream.Recv()
+		if err != nil {
+			log.Printf("Error in receiving message from server :: %v", err)
+		}
+
+		//print message to console
+		fmt.Printf("%s : %s \n",mssg.Name,mssg.Body)
+		
 	}
-	return proto.NewTimeAskClient(conn), nil
 }
