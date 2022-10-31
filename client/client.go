@@ -53,6 +53,7 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 		log.Fatal("Error:", err)
 	}else{
 		log.Println("Server Connected, chat started")	
+		log.Println("-- To leave chat write 'leave chat'")
 		log.Println("------------------------------")	
 	}
 
@@ -66,8 +67,8 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 				log.Fatal("Error:", err)
 			}
 			if username != messageIncoming.User {
-				lamportTimeStamp = int64(math.Max(float64(messageIncoming.LamportTimeStamp), float64(lamportTimeStamp)))+1
 				LPTS:= strconv.FormatInt(lamportTimeStamp, 10)
+				lamportTimeStamp = int64(math.Max(float64(messageIncoming.LamportTimeStamp), float64(lamportTimeStamp)))
 				if(messageIncoming.Message=="was added to the chat"){
 					log.Println("-",messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS,"-")		
 				}else if(messageIncoming.Message=="left chat"){
