@@ -92,6 +92,11 @@ func leaveChat(ctx context.Context, client chittyChat.ChatServiceClient, usernam
 }
 
 func sendMessage(ctx context.Context, client chittyChat.ChatServiceClient, message string, username string) {
+	if 128 < len(message) {
+		log.Println("Message is too long. Max 128 characters")
+		return
+	}
+
 	lamportTimeStamp++
 	if message == "leave chat" {
 		message = "left chat"
