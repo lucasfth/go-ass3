@@ -1,0 +1,23 @@
+syntax = "proto3";
+package chatServer;
+option go_package = "chatServer/chittyChat";
+
+
+service chatService {
+    rpc SendMessage(stream Message) returns (Message){}
+    rpc JoinChat(Chat) returns (stream Message){}
+    rpc LeaveChat(Chat) returns (stream Message){}
+}
+
+message Chat {
+    string name = 1;
+    string user = 2;
+}
+
+message Message {
+    string User = 1;
+    Chat chat = 2;
+    string message = 3;
+    int64 lamportTimeStamp = 4;
+}
+

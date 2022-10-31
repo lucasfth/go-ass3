@@ -2,114 +2,112 @@ package main
 
 import (
 	"bufio"
+	chittyChat "chittyChat/chatServer"
+	"math"
 	"context"
-	"fmt"
-	"chatster/chatserver"
 	"log"
 	"os"
-	"strings"
+	"strconv"
+	"time"
 	"google.golang.org/grpc"
 )
 
+var lamportTimeStamp = int64(0)
+
 func main() {
+	//Removes time from Log prints
+	log.SetFlags(0)
 
-	fmt.Println("Enter Server IP:Port ::: ")
-	reader := bufio.NewReader(os.Stdin)
-	serverID, err := reader.ReadString('\n')
+	username := enterUsername()
+	ctx := context.Background()
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
 
+	conn, err := grpc.Dial(":8080", opts...)
 	if err != nil {
-		log.Printf("Failed to read from console :: %v", err)
-	}
-	serverID = strings.Trim(serverID, "\r\n")
-
-	log.Println("Connecting : " + serverID)
-
-	//connect to grpc server
-	conn, err := grpc.Dial(serverID, grpc.WithInsecure())
-
-	if err != nil {
-		log.Fatalf("Faile to conncet to gRPC server :: %v", err)
-	}
-	defer conn.Close()
-
-	//call ChatService to create a stream
-	client := chatserver.NewServicesClient(conn)
-
-	stream, err := client.ChatService(context.Background())
-	if err != nil {
-		log.Fatalf("Failed to call ChatService :: %v", err)
+		log.Fatal("Error at 27:", err)
 	}
 
-	// implement communication with gRPC server
-	ch := clienthandle{stream: stream}
-	ch.clientConfig()
-	go ch.sendMessage()
-	go ch.receiveMessage()
+	client := chittyChat.NewChatServiceClient(conn)
 
-	//blocker
-	bl := make(chan bool)
-	<-bl
+	go joinChat(ctx, client, username)
 
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		go sendMessage(ctx, client, scanner.Text(), username)
+	}
 }
 
-//clienthandle
-type clienthandle struct {
-	stream     chatserver.Services_ChatServiceClient
-	clientName string
+func enterUsername() string {
+	log.Print("Please enter a username: ")
+	input := bufio.NewScanner(os.Stdin)
+	input.Scan()
+
+	return input.Text()
 }
 
-func (ch *clienthandle) clientConfig() {
-
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Printf("Your Name : ")
-	name, err := reader.ReadString('\n')
+func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username string) {
+	Chat := chittyChat.Chat{Name: "chittyChat", User: username}
+	stream, err := client.JoinChat(ctx, &Chat)
 	if err != nil {
-		log.Fatalf(" Failed to read from console :: %v", err)
+		log.Fatal("Error:", err)
+	}else{
+		log.Println("Server Connected, chat started")	
+		log.Println("------------------------------")	
 	}
-	ch.clientName = strings.Trim(name, "\r\n")
 
+	sendMessage(ctx, client, "was added to the chat", username)
+
+	waitc := make(chan struct{})
+	go func() {
+		for {
+			messageIncoming, err := stream.Recv()
+			if err != nil {
+				log.Fatal("Error:", err)
+			}
+			if username != messageIncoming.User {
+				lamportTimeStamp = int64(math.Max(float64(messageIncoming.LamportTimeStamp), float64(lamportTimeStamp)))+1
+				LPTS:= strconv.FormatInt(lamportTimeStamp, 10)
+				if(messageIncoming.Message=="was added to the chat"){
+					log.Println("-",messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS,"-")		
+				}else if(messageIncoming.Message=="left chat"){
+					log.Println("-",messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")	
+				}else{
+					log.Println("["+LPTS+"]["+messageIncoming.User+"]", messageIncoming.Message)
+				}
+			}
+		}
+	}()
+	<-waitc
 }
 
-//send message
-func (ch *clienthandle) sendMessage() {
+func leaveChat(ctx context.Context, client chittyChat.ChatServiceClient, username string) {
+	Chat := chittyChat.Chat{Name: "chittyChat", User: username}
+	client.LeaveChat(ctx, &Chat)
+	time.Sleep(10*time.Millisecond)
+	os.Exit(0)
+}
 
-	// create a loop
-	for {
-
-		reader := bufio.NewReader(os.Stdin)
-		clientMessage, err := reader.ReadString('\n')
+func sendMessage(ctx context.Context, client chittyChat.ChatServiceClient, message string, username string) {
+	lamportTimeStamp++
+	if message == "leave chat" {
+		message = "left chat"
+	}
+		stream, err := client.SendMessage(ctx)
 		if err != nil {
-			log.Fatalf(" Failed to read from console :: %v", err)
+			log.Fatal("Error:", err)
 		}
-		clientMessage = strings.Trim(clientMessage, "\r\n")
-
-		clientMessageBox := &chatserver.FromClient{
-			Name: ch.clientName,
-			Body: clientMessage,
+		chatMessage := chittyChat.Message{
+			Chat:             &chittyChat.Chat{
+			Name:             "chittyChat",
+			User:             username},
+			Message:          message,
+			User:             username,
+			LamportTimeStamp: lamportTimeStamp,
 		}
-
-		err = ch.stream.Send(clientMessageBox)
-
-		if err != nil {
-			log.Printf("Error while sending message to server :: %v", err)
-		}
-
-	}
-
-}
-
-//receive message
-func (ch *clienthandle) receiveMessage() {
-
-	//create a loop
-	for {
-		mssg, err := ch.stream.Recv()
-		if err != nil {
-			log.Printf("Error in receiving message from server :: %v", err)
-		}
-
-		//print message to console
-		fmt.Printf("%s : %s \n",mssg.Name,mssg.Body)
-		
+		stream.Send(&chatMessage)
+	if message == "left chat" {
+		time.Sleep(10*time.Millisecond)
+		leaveChat(ctx, client, username)
 	}
 }
