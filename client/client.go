@@ -58,7 +58,7 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 		log.Println("------------------------------")
 	}
 
-	sendMessage(ctx, client, "was added to the chat", username)
+	sendMessage(ctx, client, "joined Chitty-Chat", username)
 
 	waitc := make(chan struct{})
 	go func() {
@@ -70,8 +70,8 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 			if username != messageIncoming.User {
 				lamportTimeStamp = int64(math.Max(float64(messageIncoming.LamportTimeStamp), float64(lamportTimeStamp)))
 				LPTS := strconv.FormatInt(lamportTimeStamp, 10)
-				if messageIncoming.Message == "was added to the chat" {
-					log.Println("-", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
+				if messageIncoming.Message == "joined Chitty-Chat" {
+					log.Println("- Participant", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
 				} else if messageIncoming.Message == "left chat" {
 					log.Println("-", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
 				} else {
