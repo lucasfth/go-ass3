@@ -72,8 +72,8 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 				LPTS := strconv.FormatInt(lamportTimeStamp, 10)
 				if messageIncoming.Message == "joined Chitty-Chat" {
 					log.Println("- Participant", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
-				} else if messageIncoming.Message == "left chat" {
-					log.Println("-", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
+				} else if messageIncoming.Message == "left Chitty-Chat" {
+					log.Println("- Participant", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
 				} else {
 					log.Println("["+LPTS+"]["+messageIncoming.User+"]", messageIncoming.Message)
 				}
@@ -99,7 +99,7 @@ func sendMessage(ctx context.Context, client chittyChat.ChatServiceClient, messa
 
 	lamportTimeStamp++
 	if message == "leave chat" {
-		message = "left chat"
+		message = "left Chitty-Chat"
 	}
 	stream, err := client.SendMessage(ctx)
 	if err != nil {
@@ -114,7 +114,7 @@ func sendMessage(ctx context.Context, client chittyChat.ChatServiceClient, messa
 		LamportTimeStamp: lamportTimeStamp,
 	}
 	stream.Send(&chatMessage)
-	if message == "left chat" {
+	if message == "left Chitty-Chat" {
 		time.Sleep(10 * time.Millisecond)
 		leaveChat(ctx, client, username)
 	}
