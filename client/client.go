@@ -3,12 +3,13 @@ package main
 import (
 	"bufio"
 	chittyChat "chittyChat/chatServer"
-	"math"
 	"context"
 	"log"
+	"math"
 	"os"
 	"strconv"
 	"time"
+
 	"google.golang.org/grpc"
 )
 
@@ -51,10 +52,10 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 	stream, err := client.JoinChat(ctx, &Chat)
 	if err != nil {
 		log.Fatal("Error:", err)
-	}else{
-		log.Println("Server Connected, chat started")	
+	} else {
+		log.Println("Server Connected, chat started")
 		log.Println("-- To leave chat write 'leave chat'")
-		log.Println("------------------------------")	
+		log.Println("------------------------------")
 	}
 
 	sendMessage(ctx, client, "was added to the chat", username)
@@ -67,15 +68,16 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 				log.Fatal("Error:", err)
 			}
 			if username != messageIncoming.User {
-				LPTS:= strconv.FormatInt(lamportTimeStamp, 10)
 				lamportTimeStamp = int64(math.Max(float64(messageIncoming.LamportTimeStamp), float64(lamportTimeStamp)))
-				if(messageIncoming.Message=="was added to the chat"){
-					log.Println("-",messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS,"-")		
-				}else if(messageIncoming.Message=="left chat"){
-					log.Println("-",messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")	
-				}else{
+				LPTS := strconv.FormatInt(lamportTimeStamp, 10)
+				if messageIncoming.Message == "was added to the chat" {
+					log.Println("-", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
+				} else if messageIncoming.Message == "left chat" {
+					log.Println("-", messageIncoming.User, messageIncoming.Message, "at Lamport time", LPTS, "-")
+				} else {
 					log.Println("["+LPTS+"]["+messageIncoming.User+"]", messageIncoming.Message)
 				}
+				lamportTimeStamp++
 			}
 		}
 	}()
@@ -85,7 +87,7 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 func leaveChat(ctx context.Context, client chittyChat.ChatServiceClient, username string) {
 	Chat := chittyChat.Chat{Name: "chittyChat", User: username}
 	client.LeaveChat(ctx, &Chat)
-	time.Sleep(10*time.Millisecond)
+	time.Sleep(10 * time.Millisecond)
 	os.Exit(0)
 }
 
@@ -94,21 +96,21 @@ func sendMessage(ctx context.Context, client chittyChat.ChatServiceClient, messa
 	if message == "leave chat" {
 		message = "left chat"
 	}
-		stream, err := client.SendMessage(ctx)
-		if err != nil {
-			log.Fatal("Error:", err)
-		}
-		chatMessage := chittyChat.Message{
-			Chat:             &chittyChat.Chat{
-			Name:             "chittyChat",
-			User:             username},
-			Message:          message,
-			User:             username,
-			LamportTimeStamp: lamportTimeStamp,
-		}
-		stream.Send(&chatMessage)
+	stream, err := client.SendMessage(ctx)
+	if err != nil {
+		log.Fatal("Error:", err)
+	}
+	chatMessage := chittyChat.Message{
+		Chat: &chittyChat.Chat{
+			Name: "chittyChat",
+			User: username},
+		Message:          message,
+		User:             username,
+		LamportTimeStamp: lamportTimeStamp,
+	}
+	stream.Send(&chatMessage)
 	if message == "left chat" {
-		time.Sleep(10*time.Millisecond)
+		time.Sleep(10 * time.Millisecond)
 		leaveChat(ctx, client, username)
 	}
 }
