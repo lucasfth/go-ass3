@@ -56,6 +56,7 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 		log.Println("Server Connected, chat started")
 		log.Println("To leave chat write 'leave chat'")
 		log.Println("--------------------------------")
+		lamportTimeStamp++
 	}
 
 	log.Println("- You joined Chityy-Chat at Lamport time", lamportTimeStamp, "-")
