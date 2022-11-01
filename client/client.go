@@ -98,6 +98,8 @@ func sendMessage(ctx context.Context, client chittyChat.ChatServiceClient, messa
 		return
 	}
 
+	lamportTimeStamp++
+
 	if message == "leave chat" {
 		message = "left Chitty-Chat"
 	}
@@ -119,5 +121,4 @@ func sendMessage(ctx context.Context, client chittyChat.ChatServiceClient, messa
 		leaveChat(ctx, client, username)
 	}
 	time.Sleep(10 * time.Millisecond)
-	lamportTimeStamp++
 }
