@@ -89,6 +89,7 @@ func leaveChat(ctx context.Context, client chittyChat.ChatServiceClient, usernam
 	Chat := chittyChat.Chat{Name: "chittyChat", User: username}
 	client.LeaveChat(ctx, &Chat)
 	time.Sleep(10 * time.Millisecond)
+	lamportTimeStamp++
 	os.Exit(0)
 }
 
