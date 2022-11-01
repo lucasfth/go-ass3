@@ -44,7 +44,7 @@ func (s *server) SendMessage(msgStream chittyChat.ChatService_SendMessageServer)
 		return err
 	}
 
-	if msg.Message != "was added to the chat" {
+	if msg.Message != "joined Chitty-Chat" {
 		log.Println("Message:", "\""+msg.Message+"\"", "received from", msg.User)
 	}else{
 		log.Println(msg.User, "joined", msg.Chat.Name)
