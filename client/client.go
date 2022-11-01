@@ -58,6 +58,7 @@ func joinChat(ctx context.Context, client chittyChat.ChatServiceClient, username
 		log.Println("--------------------------------")
 	}
 
+	log.Println("- You joined Chityy-Chat at Lamport time", lamportTimeStamp, "-")
 	sendMessage(ctx, client, "joined Chitty-Chat", username)
 
 	waitc := make(chan struct{})
